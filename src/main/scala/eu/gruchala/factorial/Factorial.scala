@@ -1,9 +1,8 @@
 package eu.gruchala.factorial
 
 object Factorial {
-  def factorial(n: Int): Int = {
-
-    def loop(rest: Int, acc: Int): Int = {
+  def factorial(n: Int): Long = {
+    def loop(rest: Int, acc: Long): Long = {
       if (rest == 0) acc
       else loop(rest - 1, acc * rest)
     }
