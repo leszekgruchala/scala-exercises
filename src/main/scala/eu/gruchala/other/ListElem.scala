@@ -1,9 +1,5 @@
 package eu.gruchala.other
 
-/**
- * @author lgr
- * @since 06.12.2013
- */
 trait ListElem {
 
     // returns value of ListElem, if it is non empty
