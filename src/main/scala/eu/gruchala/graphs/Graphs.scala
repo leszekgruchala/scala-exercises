@@ -1,11 +1,86 @@
 package eu.gruchala.graphs
 
+import scala.annotation.tailrec
+
 object Graphs {
 
-  def graphTraversal(graph: Set[Vertex]): Set[String] = {
+  object Search {
+
+    /**
+      * Mostly used if we want to visit every node/vertex in the graph.
+      * We start at the root (or selected node) and explore each branch completely,
+      * before moving to another branch. We go deep before we go wide.
+      */
+    def depthFirstSearch(graph: Vertex, lookupNode: String): (Option[Vertex], IndexedSeq[String]) = {
+
+      @tailrec //Cannot extract 'leftBranches' logic to preserve tail-recursion
+      def loop(node: Vertex, leftBranches: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+        if (visited.contains(node.name)) {
+          leftBranches match {
+            case Nil => None -> visited
+            case h :: t => loop(h, t, visited)
+          }
+        } else {
+          val allVisited = visited :+ node.name
+          if (node.name == lookupNode) Some(node) -> allVisited
+          else {
+            node.edges.toList match {
+              case Nil => //None
+                leftBranches match {
+                  case Nil => None -> allVisited
+                  case h :: t => loop(h, t, allVisited)
+                }
+
+              case h :: t => loop(h, t ++ leftBranches, allVisited)
+            }
+          }
+        }
+      }
+
+      loop(graph, Nil, IndexedSeq.empty)
+    }
+
+    /**
+      * Used to find shortest path between two nodes.
+      * We start at the root (or selected node) and explore each neighbor,
+      * before going to any child. We go wide before we go deep.
+      */
+    def breadthFirstSearch(graph: Vertex, lookupNode: String): (Option[Vertex], IndexedSeq[String]) = {
+      @tailrec //Cannot extract 'leftBranches' logic to preserve tail-recursion
+      def loop(node: Vertex, leftBranches: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+        if (visited.contains(node.name)) {
+          leftBranches match {
+            case Nil => None -> visited
+            case h :: t => loop(h, t, visited)
+          }
+        } else {
+          val allVisited = visited :+ node.name
+          if (node.name == lookupNode) Some(node) -> allVisited
+          else {
+            node.edges.toList match {
+              case Nil => //None
+                leftBranches match {
+                  case Nil => None -> allVisited
+                  case h :: t => loop(h, t, allVisited)
+                }
+
+              case h :: t => loop(h, t ++ leftBranches, allVisited)
+            }
+          }
+        }
+      }
+
+      val r = loop(graph, Nil, IndexedSeq.empty)
+      println(r)
+      r
+    }
+
+  }
+
+  def visitAll(graph: IndexedSeq[Vertex]): Set[String] = {
 
     def loop(current: Vertex, visited: Set[String]): Set[String] = {
-      (for (next <- current.edges if !visited.contains(next.name))
+      (for (next <- current.edges.toSet if !visited.contains(next.name))
         yield loop(next, visited + next.name)).flatten + current.name
     }
 

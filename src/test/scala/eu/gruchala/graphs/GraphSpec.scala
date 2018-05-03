@@ -5,14 +5,34 @@ import eu.gruchala.graphs.Graphs._
 
 class GraphSpec extends WordSpec with Matchers {
 
-  "Graph traversal" should {
-    "travers all vertexes" in {
-      graphTraversal(graph) shouldBe Set("A", "B", "C", "D")
+  "Graph" should {
+    "allow to travers and visit all vertexes" in {
+      visitAll(graph).toIndexedSeq shouldBe IndexedSeq("A", "C", "B", "D")
     }
-  }
 
-  "Cycle detection" should {
-    "return true" when {
+    "provide DepthFirstSearch (DFS) algorithm" in {
+      import Graphs.Search.depthFirstSearch
+
+      val (v, l) = depthFirstSearch(graph.head, "D")
+      v shouldEqual Some(Vertex("D"))
+      l should contain inOrderElementsOf IndexedSeq("A", "B", "C", "D")
+      val (v2, l2) = depthFirstSearch(graph2, "5")
+      v2 shouldEqual Some(Vertex("5"))
+      l2 should contain inOrderElementsOf IndexedSeq("0", "1", "3", "2", "4", "5")
+    }
+
+    "provide BreadthFirstSearch (BFS) algorithm" in {
+      import Graphs.Search.breadthFirstSearch
+
+      val (v, l) = breadthFirstSearch(graph.head, "D")
+      v shouldEqual Some(Vertex("D"))
+      l should contain inOrderElementsOf IndexedSeq("A", "B", "D", "C")
+      val (v2, l2) = breadthFirstSearch(graph2, "5")
+      v2 shouldEqual Some(Vertex("5"))
+      l2 should contain inOrderElementsOf IndexedSeq("0", "1", "4", "5", "3", "2")
+    }
+
+    "allow cycle detection" when {
       "Graph (1,3),(3,5),(5,1) is provided" in {
         hasCycle(Seq((1,3),(3,5),(5,1))) shouldBe true
       }
@@ -28,9 +48,7 @@ class GraphSpec extends WordSpec with Matchers {
       "Graph (1,2)(2,3)(2,1)(3,1) is provided" in {
         hasCycle(Seq((1,2),(2,3),(2,1),(3,1))) shouldBe true
       }
-    }
 
-    "return false" when {
       "Graph (1,3),(4,10),(5,2) is provided" in {
         hasCycle(Seq((1,3),(4,10),(5,2))) shouldBe false
       }
@@ -43,14 +61,22 @@ class GraphSpec extends WordSpec with Matchers {
     }
   }
 
-
-  val graph = Set(
-    Vertex("A", Set(
-      Vertex("B", Set(Vertex("C", Set(Vertex("A", Set()))))),
-      Vertex("D", Set())
+  val graph = IndexedSeq(
+    Vertex("A", IndexedSeq(
+        Vertex("B", IndexedSeq(Vertex("C", IndexedSeq(Vertex("A", IndexedSeq()))))),
+        Vertex("D", IndexedSeq())
+      )
     )
-    ))
-
+  )
+  private val vertex4 = Vertex("4")
+  val graph2 = Vertex("0", IndexedSeq(
+    Vertex("1", IndexedSeq(
+      Vertex("3", IndexedSeq(Vertex("2"), vertex4)),
+      vertex4
+    )),
+    vertex4,
+    Vertex("5")
+  ))
 
 }
 
