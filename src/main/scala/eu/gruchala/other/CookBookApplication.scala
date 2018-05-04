@@ -1,8 +1,10 @@
 package eu.gruchala.other
 
 import java.util.concurrent.atomic.AtomicInteger
+
 import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
+import scala.util.control.NoStackTrace
 
 object CookBookApplication {
 
@@ -32,7 +34,7 @@ object Recipe {
     def apply(name: String, products: List[Product], difficultyLevel: DifficultyLevel.Value) = new Recipe(new AtomicInteger()
         .incrementAndGet(), name, products, difficultyLevel)
 
-    def apply(name: String, products: Map[String, Int], difficultyLevel: DifficultyLevel.Value) = {
+    def apply(name: String, products: Map[String, Int], difficultyLevel: DifficultyLevel.Value): Recipe = {
         val l = for {s <- products} yield Product(s._1, s._2)
         new Recipe(new AtomicInteger().incrementAndGet(), name, l.toList, difficultyLevel)
     }
@@ -56,13 +58,12 @@ object CookBook {
 
     def findById(id: Long): Recipe = {
         @tailrec
-        def iter(restList: List[Recipe]): Recipe = prods.toList match {
-            case head :: tail => {
-                if (head.id == id) head else iter(tail)
-            }
+        def loop(restList: List[Recipe]): Recipe = prods.toList match {
+            case head :: tail =>
+                if (head.id == id) head else loop(tail)
             case Nil => throw NoSuchRecipeException
         }
-        iter(prods.toList)
+        loop(prods.toList)
     }
 
     def findByDifficultLevel(lvl: DifficultyLevel.Value): List[Recipe] = for {
@@ -70,7 +71,7 @@ object CookBook {
         if r.difficultyLevel == lvl
     } yield r
 
-    def removeById(id: Long) {
+    def removeById(id: Long): Unit = {
         prods.find(_.id==id) match {
           case Some(x) => prods -= x
           case None => throw NoSuchRecipeException
@@ -78,4 +79,4 @@ object CookBook {
     }
 }
 
-object NoSuchRecipeException extends Exception
+object NoSuchRecipeException extends Exception with NoStackTrace

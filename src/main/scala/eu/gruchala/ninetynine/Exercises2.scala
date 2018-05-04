@@ -4,14 +4,14 @@ import scala.annotation.tailrec
 
 object Exercises2 {
 
-  def removeDuplicates(list: List[Int]) = {
+  def removeDuplicates(list: List[Int]): List[Int] = {
     @tailrec
-    def iter(current: Int, restOfList: List[Int], acc: List[Int]): List[Int] = {
-      if (!restOfList.isEmpty) {
+    def loop(current: Int, restOfList: List[Int], acc: List[Int]): List[Int] = {
+      if (restOfList.nonEmpty) {
         if (acc.head != current) {
-          iter(restOfList.head, restOfList.tail, current :: acc)
+          loop(restOfList.head, restOfList.tail, current :: acc)
         } else {
-          iter(restOfList.head, restOfList.tail, acc)
+          loop(restOfList.head, restOfList.tail, acc)
         }
       } else {
         val r = current :: acc
@@ -19,31 +19,31 @@ object Exercises2 {
       }
     }
 
-    iter(list.head, list.tail, list.head :: Nil)
+    loop(list.head, list.tail, list.head :: Nil)
   }
 
   def nth(n: Int, l: List[Int]): Int = {
     @tailrec
-    def iter(iteration: Int): Int = {
+    def loop(iteration: Int): Int = {
       if (iteration == n) {
         l(iteration)
       } else {
-        iter(iteration + 1)
+        loop(iteration + 1)
       }
     }
-    iter(0)
+    loop(0)
   }
 
   def lastButOne(l: List[Int]): Int = {
     l.reverse.tail.head
   }
 
-  def sumOfMultiples(lower: Int, upper: Int) = {
+  def sumOfMultiples(lower: Int, upper: Int): Int = {
     val range = (lower to upper).toList
     range.filter(x => x % 3 == 0 || x % 5 == 0).sum
   }
 
   def toAsci(chars: List[Char]): List[Int] = {
-    chars map (_ toInt)
+    chars.map(_.toInt)
   }
 }
