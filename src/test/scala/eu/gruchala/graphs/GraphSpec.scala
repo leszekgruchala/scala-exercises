@@ -26,10 +26,15 @@ class GraphSpec extends WordSpec with Matchers {
 
       val (v, l) = breadthFirstSearch(graph.head, "D")
       v shouldEqual Some(Vertex("D"))
-      l should contain inOrderElementsOf IndexedSeq("A", "B", "D", "C")
-      val (v2, l2) = breadthFirstSearch(graph2, "5")
-      v2 shouldEqual Some(Vertex("5"))
-      l2 should contain inOrderElementsOf IndexedSeq("0", "1", "4", "5", "3", "2")
+      l should contain inOrderElementsOf IndexedSeq("A", "B", "D")
+
+      val (v2, l2) = breadthFirstSearch(graph.head, "C")
+      v2 shouldEqual Some(cVertex)
+      l2 should contain inOrderElementsOf IndexedSeq("A", "B", "D", "C")
+
+      val (v3, l3) = breadthFirstSearch(graph2, "100")
+      v3 shouldEqual None
+      l3 should contain inOrderElementsOf IndexedSeq("0", "1", "4", "5", "3", "2")
     }
 
     "allow cycle detection" when {
@@ -60,10 +65,10 @@ class GraphSpec extends WordSpec with Matchers {
       }
     }
   }
-
+  private val cVertex = Vertex("C", IndexedSeq(Vertex("A", IndexedSeq())))
   val graph = IndexedSeq(
     Vertex("A", IndexedSeq(
-        Vertex("B", IndexedSeq(Vertex("C", IndexedSeq(Vertex("A", IndexedSeq()))))),
+        Vertex("B", IndexedSeq(cVertex)),
         Vertex("D", IndexedSeq())
       )
     )
