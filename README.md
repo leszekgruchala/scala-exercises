@@ -20,5 +20,6 @@ scala-exercises
     * BFS - breadth first search
     * visiting all
     * has cycles
+* mutable double linked list
 * plus few other smaller exercises
 
