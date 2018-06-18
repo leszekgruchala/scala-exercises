@@ -6,6 +6,26 @@ import eu.gruchala.graphs.Graphs._
 class GraphSpec extends WordSpec with Matchers {
 
   "Graph" should {
+
+    "allow to check existence of a route between nodes" in {
+      val directedGraph = IndexedSeq(
+        Vertex("0", IndexedSeq(
+            Vertex("1", IndexedSeq(Vertex("2", IndexedSeq(Vertex("0")))))
+          )
+        ),
+        Vertex("3", IndexedSeq(Vertex("2")))
+      )
+
+      hasRoute(directedGraph, "0", "1") shouldBe true
+      hasRoute(directedGraph, "1", "0") shouldBe false
+      hasRoute(directedGraph, "2", "3") shouldBe false
+      hasRoute(directedGraph, "3", "2") shouldBe true
+      hasRoute(directedGraph, "1", "2") shouldBe true
+      hasRoute(directedGraph, "2", "1") shouldBe false
+      hasRoute(directedGraph, "2", "0") shouldBe true
+      hasRoute(directedGraph, "3", "0") shouldBe false
+    }
+
     "allow to travers and visit all vertexes" in {
       visitAll(graph).toIndexedSeq shouldBe IndexedSeq("A", "C", "B", "D")
     }

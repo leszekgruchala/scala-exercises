@@ -121,5 +121,21 @@ object Graphs {
     }
   }
 
+  def hasRoute(graph: IndexedSeq[Vertex], a: String, b: String): Boolean = {
 
+    @tailrec
+    def loop(curr: Vertex, rest: List[Vertex]): Boolean = {
+      if (curr.name == a) {
+        curr.edges.exists(_.name == b)
+      } else {
+        rest match {
+          case Nil => false
+          case h :: t =>
+            loop(h, h.edges.toList ::: t)
+        }
+      }
+    }
+
+    graph.exists(edge => loop(edge, edge.edges.toList))
+  }
 }
