@@ -22,5 +22,6 @@ scala-exercises
     * has cycles
     * has route between edges
 * mutable double linked list
+* trampolining
 * plus few other smaller exercises
 
