@@ -14,30 +14,30 @@ object Graphs {
       */
     def depthFirstSearch(graph: Vertex, lookupNode: String): (Option[Vertex], IndexedSeq[String]) = {
 
-      def moveOn(leftBranches: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+      def moveOn(leftBranches: IndexedSeq[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
         leftBranches match {
-          case Nil => None -> visited
-          case h :: t => loop(h, t, visited)
+          case h +: t => loop(h, t, visited)
+          case _ => None -> visited
         }
       }
 
       @tailrec
-      def loop(node: Vertex, leftBranches: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+      def loop(node: Vertex, leftBranches: IndexedSeq[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
         if (visited.contains(node.name)) {
           moveOn(leftBranches, visited)
         } else {
           val allVisited = visited :+ node.name
           if (node.name == lookupNode) Some(node) -> allVisited
           else {
-            node.edges.toList match {
-              case Nil => moveOn(leftBranches, allVisited)
-              case h :: t => loop(h, t ++ leftBranches, allVisited)
+            node.edges match {
+              case h +: t => loop(h, t ++ leftBranches, allVisited)
+              case _ => moveOn(leftBranches, allVisited)
             }
           }
         }
       }
 
-      loop(graph, Nil, IndexedSeq.empty)
+      loop(graph, IndexedSeq.empty, IndexedSeq.empty)
     }
 
     /**
@@ -48,37 +48,37 @@ object Graphs {
       */
     def breadthFirstSearch(graph: Vertex, lookupNode: String): (Option[Vertex], IndexedSeq[String]) = {
 
-      def moveDeep(leftDeepNodes: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+      def moveDeep(leftDeepNodes: IndexedSeq[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
         leftDeepNodes match {
-          case Nil => None -> visited
-          case h :: t => loop(h, h.edges.toList, t, visited)
+          case h +: t => loop(h, h.edges, t, visited)
+          case _ => None -> visited
         }
       }
 
       @tailrec
-      def loop(node: Vertex, leftBranches: List[Vertex], leftDeepNodes: List[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
+      def loop(node: Vertex, leftBranches: IndexedSeq[Vertex], leftDeepNodes: IndexedSeq[Vertex], visited: IndexedSeq[String]): (Option[Vertex], IndexedSeq[String]) = {
         if (visited.contains(node.name)) {
           leftBranches match {
-            case Nil => moveDeep(leftDeepNodes, visited)
-            case h :: t => loop(h, t, h :: leftDeepNodes, visited)
+            case h +: t => loop(h, t, h +: leftDeepNodes, visited)
+            case _ => moveDeep(leftDeepNodes, visited)
           }
         } else {
           val allVisited = visited :+ node.name
           if (node.name == lookupNode) Some(node) -> allVisited
           else {
             leftBranches match {
-              case Nil =>
-                node.edges.toList match {
-                  case Nil => moveDeep(leftDeepNodes, allVisited)
-                  case h :: t => loop(h, t ++ leftBranches, h :: leftDeepNodes, allVisited)
+              case h +: t => loop(h, t, h +: leftDeepNodes, allVisited)
+              case _ =>
+                node.edges match {
+                  case h +: t => loop(h, t ++ leftBranches, h +: leftDeepNodes, allVisited)
+                  case _ => moveDeep(leftDeepNodes, allVisited)
                 }
-              case h :: t => loop(h, t, h :: leftDeepNodes, allVisited)
             }
           }
         }
       }
 
-      loop(graph, Nil, Nil, IndexedSeq.empty)
+      loop(graph, IndexedSeq.empty, IndexedSeq.empty, IndexedSeq.empty)
     }
   }
 
