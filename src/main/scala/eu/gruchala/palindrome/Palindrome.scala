@@ -3,9 +3,9 @@ package eu.gruchala.palindrome
 object Palindrome {
 
   def isPalindrome(s: String): Boolean = {
-    !(for (i <- 0 to s.length/2) yield {
-      s(i) == s(s.length - 1 - i)
-    }).contains(false)
+    (for (i <- 0 until s.length/2) yield {
+      s.charAt(i) == s.charAt(s.length - 1 - i)
+    }).forall(_ == true)
   }
 
   def isPalindrome2(s: String): Boolean = {
