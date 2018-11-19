@@ -22,6 +22,9 @@ scala-exercises
     * has cycles
     * has route between edges
 * mutable double linked list
+* Sorting two Int arrays
+* in-memory cache with Future callbacks
+* url executor from CSV file 
 * trampolining
 * plus few other smaller exercises
 
