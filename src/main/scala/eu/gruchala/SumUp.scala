@@ -1,6 +1,6 @@
 package eu.gruchala
 
-object SomeUp {
+object SumUp {
 
   def doesItSumUpTo(numbers: Seq[Int], k: Int): Boolean = {
     val histo = numbers.groupBy(identity).mapValues(_.size)

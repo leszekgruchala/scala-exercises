@@ -1,9 +1,9 @@
 package eu.gruchala
 
-import eu.gruchala.SomeUp._
+import eu.gruchala.SumUp._
 import org.scalatest.{Matchers, WordSpec}
 
-class SomeUpSpecs extends WordSpec with Matchers {
+class SumUpSpecs extends WordSpec with Matchers {
 
   "Summing two digits" should {
     "return true" when {
