@@ -34,8 +34,10 @@ object TreesOps {
 
   //All levels fully filled, except the last one - if last is one not fully filled, then can be only on the left
   def isComplete(treeNode: BinaryTreeNode): Boolean = {
-    val childrenNo = Seq(treeNode.left, treeNode.right).flatten.size
-    (childrenNo == 0 || childrenNo == 2 || (childrenNo == 1 && treeNode.right.isEmpty)) &&
+    val children = Seq(treeNode.left, treeNode.right).flatten
+    val childrenNo = children.size
+    val isLastLevel = children.forall(n => n.left.isEmpty && n.right.isEmpty)
+    (childrenNo == 0 || childrenNo == 2 || (isLastLevel && childrenNo == 1 && treeNode.right.isEmpty)) &&
       treeNode.left.forall(isComplete) &&
       treeNode.right.forall(isComplete)
   }
