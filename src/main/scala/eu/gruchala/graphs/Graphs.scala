@@ -42,7 +42,7 @@ object Graphs {
 
     /**
       * Tail-recursive implementation of breadth-first graph search algorithm.
-      * Used to find shortest path between two nodes.
+      * Used to find shortest path between two nodes (as part of bidirectional search).
       * We start at the root (or selected node) and explore each neighbor,
       * before going to any child. We go wide before we go deep.
       */
