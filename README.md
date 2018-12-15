@@ -14,7 +14,6 @@ scala-exercises
     * is full
     * is perfect
     * is balanced
-    * levels counter
 * graphs
     * DFS - depth first search
     * BFS - breadth first search
@@ -22,7 +21,8 @@ scala-exercises
     * has cycles
     * has route between edges
 * mutable double linked list
-* Sorting two Int arrays
+* sorting two Int arrays
+* binary search algorithm of sorted array
 * in-memory cache with Future callbacks
 * url executor from CSV file 
 * trampolining
